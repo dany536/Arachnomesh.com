@@ -1,3 +1,52 @@
+﻿<?php
+$msg = "";
+// Import PHPMailer classes into the global namespace
+// These must be at the top of your script, not inside a function
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+// Load Composer's autoloader
+require 'vendor/autoload.php';
+
+// Instantiation and passing `true` enables exceptions
+$mail = new PHPMailer(true);
+if (isset($_POST['submit'])) {
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $body = $_POST['message'];
+try {
+    //Server settings
+    $mail->SMTPDebug = 0;                                       // Enable verbose debug output
+    $mail->isSMTP();                                            // Set mailer to use SMTP
+    $mail->Host       = 'smtp.gmail.com';                       // Specify main and backup SMTP servers
+    $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
+    $mail->Username   = 'techpvec1@gmail.com';                  // SMTP username
+    $mail->Password   = 'wqzlvttbvlikwuph';                     // SMTP password
+    $mail->SMTPSecure = 'tls';                                  // Enable TLS encryption, `ssl` also accepted
+    $mail->Port       = 587;                                    // TCP port to connect to
+
+    //Recipients
+    $mail->setFrom($email, $name);
+    
+    $mail->addAddress('sales@channelier.com');               
+    // $mail->addReplyTo('info@example.com', 'Information');
+     
+    // Content
+    $mail->isHTML(true);                                  // Set email format to HTML
+    $mail->Subject = 'Website Contact Form:  '.$name;
+    $mail->Body = '<h3 align=center>You have received a new message from your website contact form.</h3><br>Here are the details:<br><br>Name: '.$name.'<br><br>Email: '.$email.'<br><br>Message: '.$body; 
+    $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+
+    $mail->send();
+    $msg = 'Hey '.$name.'! Your message has been successfully sent. We will contact you very soon!';
+
+} catch (Exception $e) {
+    echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+    die();
+}
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,7 +57,7 @@
 <meta name="author" content="">
 
 <!-- Favicons
-    ================================================== -->
+    ============================================== -->
 <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon">
 <link rel="apple-touch-icon" href="img/favicon.png">
 <link rel="apple-touch-icon" sizes="72x72" href="img/favicon.png">
@@ -27,8 +76,8 @@
     ================================================== -->
 <link rel="stylesheet" type="text/css"  href="css/style.css">
 <link rel="stylesheet" type="text/css" href="css/animate.min.css">
-<link href='http://fonts.googleapis.com/css?family=Lato:400,700,900,300' rel='stylesheet' type='text/css'>
-<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,800,600,300' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Lato:400,700,900,300' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700,800,600,300' rel='stylesheet' type='text/css'>
 <script type="text/javascript" src="js/modernizr.custom.js"></script>
 </head>
 <body>
@@ -452,42 +501,6 @@
       </div>
   </div>
   
-  <!-- <div class="container hel1">
-    <div class="row">
-      <div class="col-md-3 col-sm-3 col-xs-6 team wow fadeInUp hel" data-wow-delay="600ms">
-        <div class="thumbnail"> <img src="img/team/sumit.jpg" alt="..." class="img-circle team-img">
-          <div class="caption">
-            <h3>Sumit</h3>
-            <p>Web Developer</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3 col-sm-3 col-xs-6 team wow fadeInUp" data-wow-delay="600ms">
-        <div class="thumbnail"> <img src="img/team/sandeep.jpg" alt="..." class="img-circle team-img">
-          <div class="caption">
-            <h3>Sandeep Chorge</h3>
-            <p>Android Developer</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3 col-sm-3 col-xs-6 team wow fadeInUp" data-wow-delay="600ms">
-        <div class="thumbnail"> <img src="img/team/mayuri.jpeg" alt="..." class="img-circle team-img">
-          <div class="caption">
-            <h3>Mayuri Aswale</h3>
-            <p>Web Developer</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3 col-sm-3 col-xs-6 team wow fadeInUp" data-wow-delay="800ms">
-        <div class="thumbnail"> <img src="img/team/kshitij.jpg" alt="..." class="img-circle team-img">
-          <div class="caption">
-            <h3>Kshitij Tiwari</h3>
-            <p>Sr. Software Engineer</p>
-          </div>
-        </div>
-      </div>   
-    </div>
-  </div> -->
 
   <div class="container-fluid">
     <div class="row">
@@ -580,26 +593,28 @@
           India - 400 705</p>
       </div>
       <div class="col-md-4 col-sm-4"> <i class="fa fa-envelope-o fa-2x"></i>
-        <p>contact@channelier.com</p>
+        <p><a href = "mailto: contact@channelier.com">contact@channelier.com</a></p>
       </div>
       <div> <i class="fa fa-phone fa-2x"></i>
-        <p> +91-99585 95034</p>
+        <p><a href="tel:919958595034">+91-99585 95034</a></p>
       </div>
       <div class="clearfix"></div>
     </div>
     <div class="col-md-8 col-md-offset-2 wow fadeInUp" data-wow-delay="400ms">
-	  <h3>Leave us a message</h3>
-      <form name="sentMessage" id="contactForm" novalidate>
+    <h3>Leave us a message</h3>
+    
+
+      <form name="sentMessage" method='post' id="contactForm" novalidate>
         <div class="row">
           <div class="col-md-6">
             <div class="form-group">
-              <input type="text" id="name" class="form-control" placeholder="Name" required="required">
+              <input type="text" name="name" id="name" class="form-control" placeholder="Name" required="required">
               <p class="help-block text-danger"></p>
             </div>
           </div>
           <div class="col-md-6">
             <div class="form-group">
-              <input type="email" id="email" class="form-control" placeholder="Email" required="required">
+              <input type="email" name="email" id="email" class="form-control" placeholder="Email" required="required">
               <p class="help-block text-danger"></p>
             </div>
           </div>
@@ -609,8 +624,12 @@
           <p class="help-block text-danger"></p>
         </div>
         <div id="success"></div>
-        <button type="submit" class="btn btn-default">Send Message</button>
+        <button type="submit" name="submit" class="btn btn-default">Send Message</button>
       </form>
+
+      <?php echo $msg; ?>
+    
+      
       <div class="social">
         <ul>
           <li><a href="https://www.facebook.com/Channelexperts/" target="blank"><i class="fa fa-facebook"></i></a></li>
@@ -638,7 +657,7 @@
 <script type="text/javascript" src="js/bootstrap.js"></script> 
 <script type="text/javascript" src="js/SmoothScroll.js"></script> 
 <script type="text/javascript" src="js/wow.min.js"></script> 
-<script type="text/javascript" src="js/jquery.prettyPhoto.js"></script> 
+<!-- <script type="text/javascript" src="js/jquery.prettyPhoto.js"></script>  -->
 <script type="text/javascript" src="js/jquery.isotope.js"></script> 
 <script type="text/javascript" src="js/jqBootstrapValidation.js"></script> 
 <script type="text/javascript" src="js/contact_me.js"></script> 
